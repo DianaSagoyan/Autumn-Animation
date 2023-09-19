@@ -17,7 +17,8 @@
 		textGreeting = document.querySelectorAll(".text-greeting");
 
 	//Tree
-	let treeLeaves = document.getElementById("tree_leaves");
+	let treeLeaves = document.querySelectorAll(".tree-leaf");
+	let treeLeafStem = document.querySelectorAll(".tree-leaf-stem");
 	let floorLeaves = document.getElementById("floor_leaves");
 	let treeTrunk = document.getElementById("tree_trunk");
 	let nestAndLeaves = document.getElementById("NestAndLeaves");
@@ -70,8 +71,10 @@
 	function enterTreeStuff(){
 		let treeStuffTl = gsap.timeline({});
 
-		treeStuffTl.staggerFromTo(treeLeaves, 0.5, {scale: 0.2, opacity: 0, transformOrigin: 'center bottom'},
+		treeStuffTl.staggerFromTo(treeLeafStem, 0.5, {scale: 0.2, opacity: 0, transformOrigin: 'center bottom'},
 									 {scale: 1, opacity: 1, transformOrigin: 'center bottom'}, 0.02)
+									 .staggerFromTo(treeLeaves, 0.5, {scale: 0.2, opacity: 0, transformOrigin: 'center bottom'},
+									 {scale: 1, opacity: 1, transformOrigin: 'center bottom'}, "<")
 									 .fromTo(nestAndLeaves, 1, {y: 0, scale: 0.2, opacity: 0, transformOrigin: "center center"},
 									 {y: -15, opacity: 1, scale: 1, transformOrigin: "center center", ease: "elastic.out", delay: 0.4}, "+=0.1")
 									 .to(nestAndLeaves, 0.3, {y: 15, ease: "bounce.out"}, "-=0.2")
@@ -111,6 +114,17 @@
 	}
 
 	// enter the greeting text
+	function enterGreeting(){
+		let greetingTl = gsap.timeline({});
+
+		greetingTl
+				.fromTo(textLine1, 1, {y: -50, opacity: 0}, {y: 0, opacity: 1})	
+				.fromTo(textLine2, 1, {y: -25, opacity: 0}, {y: 0, opacity: 1})	
+				.staggerFromTo(textGreeting, 0.5, {scale: 2, opacity: 0, transformOrigin: "center center"}, 
+						{scale: 1, opacity: 1, transformOrigin: "center center"}, 0.1)
+
+		return greeting;
+	}
 	
 	// the GO function ...to kick things all off
 
@@ -120,7 +134,8 @@
 
 		masterTl.add(clearStage(), 'scene-clear-stage')
 				.add(enterFloorVegetation(), 'scene-floor-vegetation')
-				.add(enterTreeStuff(), 'scene-enter-treestuff');
+				.add(enterTreeStuff(), 'scene-enter-treestuff')
+				.add(enterGreeting, 'scene-greeting');
 	}
 
 	go();
