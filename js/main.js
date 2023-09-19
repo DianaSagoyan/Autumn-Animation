@@ -67,6 +67,48 @@
 	}
 
 	// enter tree
+	function enterTreeStuff(){
+		let treeStuffTl = gsap.timeline({});
+
+		treeStuffTl.staggerFromTo(treeLeaves, 0.5, {scale: 0.2, opacity: 0, transformOrigin: 'center bottom'},
+									 {scale: 1, opacity: 1, transformOrigin: 'center bottom'}, 0.02)
+									 .fromTo(nestAndLeaves, 1, {y: 0, scale: 0.2, opacity: 0, transformOrigin: "center center"},
+									 {y: -15, opacity: 1, scale: 1, transformOrigin: "center center", ease: "elastic.out", delay: 0.4}, "+=0.1")
+									 .to(nestAndLeaves, 0.3, {y: 15, ease: "bounce.out"}, "-=0.2")
+									 .add('nest-pop-in')
+									 .set(birdHat, {rotation: 12, x: "+=6"})
+									 .to(bird, 1.4, {y: "-=23", opacity: 1, ease: "power4.out"}, 'nest-pop-in +=0.1')
+									 .add('bird-peeking')
+									 .set(leftEye, {opacity: 0})
+									 .set(rightEye, {opacity: 0})
+									 .set(leftEye, {opacity: 1}, "+=0.2")
+									 .set(rightEye, {opacity: 1}, "<")
+									 .set(leftEye, {opacity: 0}, "+=0.3")
+									 .set(rightEye, {opacity: 0}, "<")
+									 .set(leftEye, {opacity: 1}, "+=0.2")
+									 .set(rightEye, {opacity: 1}, "<")
+									 .add('bird-blinks')
+									 .to(bird, 0.8, {y: "-=23", ease: "power4.out"})
+									 .to(bird, 0.3, {y: "+=10", ease: "bounce.out"})
+									 .to(birdHat, 0.4, {y: "-=12"}, '-=0.6')
+									 .to(birdHat, 0.3, {y: 0, rotation: 0, x: 0, onComplete: startBlinking}, '-=0.2');
+							
+	function startBlinking(){
+		let birdBlinkTl = gsap.timeline({repeat: -1, repeatDelay: 5});
+
+		birdBlinkTl
+			.set(leftEye, {opacity: 0})
+			.set(rightEye, {opacity: 0})
+			.set(leftEye, {opacity: 1}, "+=0.2")
+			.set(rightEye, {opacity: 1}, "<")
+			.set(leftEye, {opacity: 0}, "+=1.2")
+			.set(rightEye, {opacity: 0}, "<")
+			.set(leftEye, {opacity: 1}, "+=0.2")
+			.set(rightEye, {opacity: 1}, "<")
+	}
+
+		return treeStuffTl;
+	}
 
 	// enter the greeting text
 	
@@ -77,7 +119,8 @@
 		const masterTl = gsap.timeline({});
 
 		masterTl.add(clearStage(), 'scene-clear-stage')
-				.add(enterFloorVegetation(), 'scene-floor-vegetation');
+				.add(enterFloorVegetation(), 'scene-floor-vegetation')
+				.add(enterTreeStuff(), 'scene-enter-treestuff');
 	}
 
 	go();
