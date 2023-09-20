@@ -4,7 +4,8 @@
 	'use strict';
 
 	// declare actors here
-	let cardContainer = document.querySelector('.card.container')
+	let cardContainer = document.querySelector('.card.container');
+	let body = document.querySelector(".body");
 
 	//Leaves
 	let brownFallingLeaf = document.getElementById("brownLeaf"),
@@ -96,19 +97,19 @@
 									 .to(birdHat, 0.4, {y: "-=12"}, '-=0.6')
 									 .to(birdHat, 0.3, {y: 0, rotation: 0, x: 0, onComplete: startBlinking}, '-=0.2');
 							
-	function startBlinking(){
-		let birdBlinkTl = gsap.timeline({repeat: -1, repeatDelay: 5});
+		function startBlinking(){
+			let birdBlinkTl = gsap.timeline({repeat: -1, repeatDelay: 5});
 
-		birdBlinkTl
-			.set(leftEye, {opacity: 0})
-			.set(rightEye, {opacity: 0})
-			.set(leftEye, {opacity: 1}, "+=0.2")
-			.set(rightEye, {opacity: 1}, "<")
-			.set(leftEye, {opacity: 0}, "+=1.2")
-			.set(rightEye, {opacity: 0}, "<")
-			.set(leftEye, {opacity: 1}, "+=0.2")
-			.set(rightEye, {opacity: 1}, "<")
-	}
+			birdBlinkTl
+				.set(leftEye, {opacity: 0})
+				.set(rightEye, {opacity: 0})
+				.set(leftEye, {opacity: 1}, "+=0.2")
+				.set(rightEye, {opacity: 1}, "<")
+				.set(leftEye, {opacity: 0}, "+=1.2")
+				.set(rightEye, {opacity: 0}, "<")
+				.set(leftEye, {opacity: 1}, "+=0.2")
+				.set(rightEye, {opacity: 1}, "<")
+		}
 
 		return treeStuffTl;
 	}
@@ -118,12 +119,42 @@
 		let greetingTl = gsap.timeline({});
 
 		greetingTl
-				.fromTo(textLine1, 1, {y: -50, opacity: 0}, {y: 0, opacity: 1})	
-				.fromTo(textLine2, 1, {y: -25, opacity: 0}, {y: 0, opacity: 1})	
+				.fromTo(textLine1, 1, {y: "-=50", opacity: 0}, {y: 0, opacity: 1, onComplete: startLoops})	
+				.fromTo(textLine2, 1, {y: "-=25", opacity: 0}, {y: 0, opacity: 1})	
 				.staggerFromTo(textGreeting, 0.5, {scale: 2, opacity: 0, transformOrigin: "center center"}, 
-						{scale: 1, opacity: 1, transformOrigin: "center center"}, 0.1)
+						{scale: 1, opacity: 1, transformOrigin: "center center"}, 0.1);
 
-		return greeting;
+		function startLoops(){
+			//background color loop
+			let colors = ["#edcc93", "#f7e3ae", "#f3ebcc", '#edcc93'];
+			let bgTl = gsap.timeline({repeat: -1, repeatDelay: 3, yoyo: true});
+
+			bgTl
+				.to(body, 3, {backgroundColor: colors[0]})
+				.to(body, 3, {backgroundColor: colors[1]}, '+=2')
+				.to(body, 3, {backgroundColor: colors[2]}, '+=2')
+				.to(body, 3, {backgroundColor: colors[3]}, '+=2');
+
+			//falling leaves loop
+			gsap.set(brownFallingLeaf, {y: -100, opacity: 0.2});
+			gsap.set(orangeFallingLeaf, {y: -100, opacity: 0.2});
+			gsap.set(redFallingLeaf, {y: -100, opacity: 0.2});
+
+			gsap.to(brownFallingLeaf, 10 + Math.random() * 10, {y: "+=1200", opacity: 1, onComplete: repeatFall, onCompleteParams: [brownFallingLeaf], ease: Linear.easeNone});
+			gsap.to(orangeFallingLeaf, 10 + Math.random() * 10, {y: "+=1200", opacity: 1, onComplete: repeatFall, onCompleteParams: [orangeFallingLeaf], ease: Linear.easeNone});
+			gsap.to(redFallingLeaf, 10 + Math.random() * 10, {y: "+=1200", opacity: 1, onComplete: repeatFall, onCompleteParams: [redFallingLeaf], ease: Linear.easeNone});
+
+			function repeatFall(leafId){
+				let range = Math.random() * 800;
+				range = range - 400
+
+				gsap.set(leafId, {x: range, y: -100, opacity: 0.2, rotation: Math.random() *360})
+
+				gsap.to(leafId, 10 + Math.random() * 10, {y: "+=1200", opacity: 1, onComplete: repeatFall, onCompleteParams:[leafId], ease: Linear.easeNone});
+			}
+		}
+
+		return greetingTl;
 	}
 	
 	// the GO function ...to kick things all off
